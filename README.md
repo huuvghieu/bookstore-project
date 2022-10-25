@@ -1,4 +1,5 @@
 ### THE BOOKSTORE MANAGEMENT PROJECT
+![image](https://user-images.githubusercontent.com/90099306/197791075-488b8a31-2047-46b6-95a8-f1c645c75106.png)
 This is a Java web application project which manages all activites in a bookstore. This project helps a bookstore can manage a large quantity of books, import and export books. This project also reports renevue of a bookstore. In addition, this project is designed to allow administrator to control the list of books, customers or staffs and view renevue.
 ## Technologies
 •	Code Management: GitHub <br />
