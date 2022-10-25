@@ -10,6 +10,11 @@ This is a Java web application project which manages all activites in a bookstor
 •	Project Management: Jira
 ## How To Use
 Follow the steps to run this project: <br />
+• Clone the repo
+   ```sh
+   git clone https://github.com/your_username_/Project-Name.git
+   ```
+•	Run BookStoreManagement(Script).sql in SQL Server (over 2008) Management Studio<br />
 •	Download and install JDK 11, Apach Tomcat 9 <br />
 •	Download and install Microsof JDBC Driver 7.2.
 
