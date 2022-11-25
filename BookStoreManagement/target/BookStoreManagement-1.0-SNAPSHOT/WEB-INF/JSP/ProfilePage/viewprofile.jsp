@@ -9,7 +9,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Profile Customer Page</title>
+        <title>Profile</title>
+        <link rel = "icon" href ="https://cdn-icons-png.flaticon.com/512/1903/1903162.png" type = "image/x-icon">
         <meta charset="utf-8">
         <link rel = "icon" href ="https://cdn-icons-png.flaticon.com/512/1903/1903162.png" type = "image/x-icon">
         <!-- Google font -->
@@ -43,13 +44,6 @@
             }
         </style>
         <!-- jQuery Plugins -->
-        <script src="JS/jquery.min.js"></script>
-        <script src="JS/bootstrap.min.js"></script>
-        <script src="JS/slick.min.js"></script>
-        <script src="JS/nouislider.min.js"></script>
-        <script src="JS/jquery.zoom.min.js"></script>
-        <script src="JS/main.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
     </head>
     <body>
         <script>
@@ -59,7 +53,7 @@
                 var choosen = urlParams.get('index');
                 if (choosen === null) {
                     choosen = "1";
-                }else{
+                } else {
                     on(choosen);
                 }
                 document.getElementById(choosen).classList.add("active");

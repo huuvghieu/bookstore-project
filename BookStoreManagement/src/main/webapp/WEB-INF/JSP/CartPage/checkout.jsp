@@ -4,6 +4,7 @@
     Author     : PC
 --%>
 
+<%@page import="dto.PromotionDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,15 +13,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel = "icon" href ="https://cdn-icons-png.flaticon.com/512/1903/1903162.png" type = "image/x-icon">
-        <title>Check Out Page</title>
+        <title>Checkout</title>
     </head>
     <body>
         <%@include file="../HeaderFooterPage/header.jsp" %>
-        <script>
-            function submitForm() {
-                document.getElementById("myForm").submit();
-            }
-        </script>
         <!-- BREADCRUMB -->
         <div id="breadcrumb" class="section">
             <!-- container -->
@@ -45,7 +41,7 @@
                     <form id="myForm" action="CheckoutController" method="GET">
                         <div class="col-md-7">
                             <!-- Shipping Details -->
-                            <div class="billing-details">
+                            <div id="info" class="billing-details">
                                 <div class="section-title">
                                     <h3 class="title">Địa chỉ giao hàng</h3>
                                 </div>
@@ -62,8 +58,10 @@
                             <!-- /Shipping Details -->
 
                             <!-- Order notes -->
+                            <p id="addr" style="display: none; color: #1e1e27; font-size: 20px;">Địa chỉ nhà sách: <span style="color: #d10024">146C Đ. Nguyễn Ảnh Thủ, Ấp Đông, Hóc Môn, Thành phố Hồ Chí Minh 700000</span>
+                                (Lưu ý khi đến nhận hàng, quý khách vui lòng đọc số điện thoại đăng kí tài khoản để được hỗ trợ lấy hàng. Xin chân thành cảm ơn quý khách)</p>
                             <div class="order-notes">
-                                <textarea class="input" placeholder="Ghi chú"></textarea>
+                                <textarea name="des" class="input" placeholder="Ghi chú"></textarea>
                             </div>
                             <!-- /Order notes -->
                         </div>
@@ -79,12 +77,17 @@
                                     <div><strong>Sản phẩm</strong></div>
                                     <div><strong>Tổng</strong></div>
                                 </div>
+
                                 <div class="order-products">
                                     <%                                        Cart cart = (Cart) session.getAttribute("CART");
                                         if (cart != null && cart.getCart().size() > 0) {
+                                            double discount = 0;
+                                            double ship = 24000;
+                                            String des = new String();
                                             String totalS = new String();
                                             Locale localeVN = new Locale("vi", "VN");
                                             NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+                                            List<PromotionDTO> list = (List<PromotionDTO>) session.getAttribute("PROMOTION");
                                             for (BookDTO book : cart.getCart().values()) {
                                                 totalS = currencyVN.format(book.getPrice() * book.getQuantity());
                                     %>
@@ -92,39 +95,114 @@
                                         <div><%= book.getQuantity()%>x <%= book.getName()%></div>
                                         <div><%= totalS%></div>
                                     </div>
-                                    <%}%>
+                                    <%
+                                        }
+                                    %>
+                                    <script>
+                                        function submitForm() {
+                                            document.getElementById("myForm").submit();
+                                        }
+                                        function hide() {
+                                            document.getElementById("payment-5").checked = true;
+                                            document.getElementById("info").style.display = "none";
+                                            document.getElementById("addr").style.display = "inline-block";
+                                            document.getElementById("shipp").innerHTML = "Miễn phí";
+                                            document.getElementById("total").innerHTML = document.getElementById("inputTotal").value;
+                                        }
+                                        function show() {
+                                            document.getElementById("info").style.display = "inline-block";
+                                            document.getElementById("addr").style.display = "none";
+                                            document.getElementById("shipp").innerHTML = document.getElementById("inputShip").value;
+                                            document.getElementById("total").innerHTML = document.getElementById("outputTotal").value;
+                                        }
+                                    </script>
                                 </div>
                                 <div class="payment-method">
                                     <div class="input-radio">
                                         <input checked="" name="method" type="radio" id="payment-4" value="ship">
-                                        <label for="payment-4">
+                                        <label onclick="show()" for="payment-4">
                                             <span></span>
                                             <b>Giao hàng tận nơi (có thể mất phí)</b>
                                         </label>
                                         <div class="caption">
-                                            <div class="order-col">
-                                                <div>Phí giao hàng</div></br>
-                                                <div><strong>FREE</strong></div></br>
-                                            </div>
                                         </div>
                                         <div class="caption">
-                                            <p>Đơn hàng của quý khách sẽ được giao theo địa chỉ chỉ định (đối với đơn hàng trên 350k sẽ được miễn phí giao hàng)</p>
+                                            <p>Đơn hàng của quý khách sẽ được giao theo địa chỉ chỉ định (đối với đơn hàng trên 360k sẽ được miễn phí giao hàng)</p>
                                         </div>
                                     </div> 
                                     <div class="input-radio">
                                         <input name="method" type="radio" id="payment-5" value="store">
-                                        <label for="payment-5">
+                                        <label onclick="hide()" for="payment-5">
                                             <span></span>
                                             <b>Nhận tại cửa hàng</b>
                                         </label>
                                         <div class="caption">
-                                            <p>Quý khách sẽ nhận hàng tại cửa hàng(miễn phí ship) </p>
+                                            <p>Quý khách sẽ nhận hàng tại cửa hàng(miễn phí giao hàng) </p>
                                         </div>
                                     </div> 
                                 </div>
+                                <%
+                                    for (PromotionDTO promotionDTO : list) {
+                                        if (promotionDTO.getCondition() <= total && promotionDTO.getDiscount() >= discount) {
+                                            discount = promotionDTO.getDiscount();
+                                            des = promotionDTO.getDescription();
+                                        }
+                                    }
+                                    if (discount > 0) {
+                                %> 
+                                <div class="input-radio">
+                                    <input checked="" name="promotion" type="radio" id="promotion">
+                                    <label for="promotion">
+                                        <span style="background-color: green; color: green; border: none;" ></span>
+                                        <b>Khuyến mãi</b>
+                                    </label>
+                                    <div class="caption">
+                                        <div class="order-col">
+                                            <div>Phần trăm khuyến mãi</div></br>
+                                            <div style="font-size: 20px; color: #d10024"><strong><%= (int) (discount * 100)%>%</strong></div></br>
+                                        </div>
+                                    </div>
+                                    <div class="caption">
+                                        <p><%= des%></p>
+                                    </div>
+                                </div>
+                                <%
+                                    }
+                                %>
+                                <div class="order-col">
+                                    <div><strong>Tổng hóa đơn</strong></div>
+                                    <div>
+                                        <%
+                                            if (discount > 0) {
+                                        %> 
+                                        <strong class="order-total"  style="text-decoration: line-through;"><%= currencyVN.format(total)%></strong>
+                                        <%
+                                            }
+                                        %>
+                                        <strong class="order-total"><%= currencyVN.format(total * (1 - discount))%></strong>
+                                    </div>
+                                </div>
+                                <div class="order-col">
+                                    <div><strong>Phí giao hàng</strong></div>
+                                    <%
+                                        if (total >= 360000) {
+                                            ship = 0;
+                                    %>
+                                    <div><strong class="order-total">Miễn phí</strong></div>
+                                    <%
+                                    } else {
+                                    %>
+                                    <input id="inputShip" hidden="" value="<%= currencyVN.format(ship)%>">
+                                    <div><strong id="shipp" class="order-total"><%= currencyVN.format(ship)%></strong></div>
+                                        <%
+                                            }
+                                        %>
+                                </div>
                                 <div class="order-col">
                                     <div><strong>Tổng thành tiền</strong></div>
-                                    <div><strong class="order-total"><%= currencyVN.format(total)%></strong></div>
+                                    <input id="inputTotal" hidden="" value="<%= currencyVN.format(total * (1 - discount))%>">
+                                    <input id="outputTotal" hidden="" value="<%= currencyVN.format(total * (1 - discount)+ ship)%>">
+                                    <div><strong id="total" class="order-total"><%= currencyVN.format(total * (1 - discount) + ship)%></strong></div>
                                 </div>
                             </div>
                             <div class="payment-method">
@@ -140,20 +218,10 @@
                                     </div>
                                 </div>
                                 <div class="input-radio">
-                                    <input type="radio" name="payment" id="payment-2" value="momo">
-                                    <label for="payment-2">
-                                        <span></span>
-                                        Momo
-                                    </label>
-                                    <div class="caption">
-                                        <p>Khi chọn phương thức thanh toán này, quý khách hàng sẽ thanh toán đơn hàng qua ứng dụng <b style="color: #a50064;">Momo</b>.</p>
-                                    </div>
-                                </div>
-                                <div class="input-radio">
                                     <input type="radio" name="payment" id="payment-3" value="paypal">
                                     <label for="payment-3">
                                         <span></span>
-                                        Paypal
+                                        <b style="color: #003087">Pay</b><b style="color: #009cde">Pal</b>
                                     </label>
                                     <div class="caption">
                                         <p>Khi chọn phương thức thanh toán này, quý khách hàng sẽ thanh toán đơn hàng qua ứng dụng <b style="color: #003087">Pay</b><b style="color: #009cde">Pal</b>.</p>

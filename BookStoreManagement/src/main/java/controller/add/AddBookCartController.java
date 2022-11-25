@@ -7,6 +7,8 @@ package controller.add;
 
 import cart.Cart;
 import dao.BookDAO;
+import dao.CategoryDAO;
+import dao.PublisherDAO;
 import dto.BookDTO;
 import java.io.IOException;
 import java.util.Map;
@@ -35,6 +37,7 @@ public class AddBookCartController extends HttpServlet {
         String url = CART;
         String controller = new String();
         try {
+            request.setCharacterEncoding("UTF-8");
             String action = request.getParameter("action");
             controller = request.getParameter("controller");
             int quantityCheck = Integer.parseInt(request.getParameter("quantityCheck"));
@@ -44,6 +47,22 @@ public class AddBookCartController extends HttpServlet {
             }
             HttpSession session = request.getSession();
             String isbn = request.getParameter("isbn");
+            String cateN = request.getParameter("cateID");
+            String pubN = request.getParameter("pubID");
+            String max = request.getParameter("max");
+            String min = request.getParameter("min");
+            String mes = request.getParameter("mess");
+            CategoryDAO cateDao = new CategoryDAO();
+            PublisherDAO pubDao = new PublisherDAO();
+            if (cateN != "") {
+                request.setAttribute("CATEGORY", cateDao.getCategory(cateN));//Lấy thông tin thể loại
+            } else if (pubN != "") {
+                request.setAttribute("PUBLISHER", pubDao.getPublisher(pubN));//Lấy thông tin nhà xuất bản
+            } else if (max != null && min != null) {
+                request.setAttribute("MAX", max);
+                request.setAttribute("MIN", min);
+                request.setAttribute("MESS", mes);
+            }
             int quantity = 0;
             BookDAO dao = new BookDAO();
             BookDTO book = dao.loadBook(isbn, "1");//Lấy chi tiết sản phẩm theo ISBN
@@ -57,9 +76,8 @@ public class AddBookCartController extends HttpServlet {
                         + "                                </div>\n"
                         + "                            </div>\n"
                         + "                         <div class=\"col-md-9\">\n"
-                        + "                             <p style=\"color: red;\"><b>Thêm \""+ book.getName() +"\" - số lượng "+ quantity +"  vào giỏ hàng thất bại</b></p>\n"
+                        + "                             <p style=\"color: red;\"><b>Thêm \"" + book.getName() + "\" - số lượng " + quantity + "  vào giỏ hàng thất bại</b></p>\n"
                         + "                             <p style=\"color: red;\"><b>(Số lượng yêu cầu phải là số dương lớn hơn 0)</b></p>\n"
-
                         + "                                </div>\n"
                         + "                            </div>");
                 if (action.equals("Home")) {
@@ -77,9 +95,27 @@ public class AddBookCartController extends HttpServlet {
                         + "                                </div>\n"
                         + "                            </div>\n"
                         + "                         <div class=\"col-md-9\">\n"
-                        + "                             <p style=\"color: red;\"><b>Thêm \""+ book.getName() +"\" - số lượng "+ quantity +"  vào giỏ hàng thất bại</b></p>\n"
+                        + "                             <p style=\"color: red;\"><b>Thêm \"" + book.getName() + "\" - số lượng " + quantity + "  vào giỏ hàng thất bại</b></p>\n"
                         + "                             <p style=\"color: red;\"><b>(Số lượng yêu cầu phải là số dương lớn hơn 0)</b></p>\n"
-
+                        + "                                </div>\n"
+                        + "                            </div>");
+                if (action.equals("Home")) {
+                    url = HOME;
+                } else {
+                    url = SUCCESS;
+                }
+                throw new Exception();
+            }
+            if (quantity > quantityCheck) {
+                request.setAttribute("MODAL", "<div class=\"row\">\n"
+                        + "                         <div class=\"col-md-3\">\n"
+                        + "                                <div class=\"product-preview\">\n"
+                        + "                                    <img src=\"" + book.getImg() + "\"/>\n"
+                        + "                                </div>\n"
+                        + "                            </div>\n"
+                        + "                         <div class=\"col-md-9\">\n"
+                        + "                             <p style=\"color: red;\"><b>Thêm \"" + book.getName() + "\" - số lượng " + quantity + "  trong giỏ hàng thất bại</b></p>\n"
+                        + "                             <p style=\"color: red;\"><b>(Số lượng yêu cầu không có sẳn - Hiện tại còn " + quantityCheck + " sản phẩm)</b></p>\n"
                         + "                                </div>\n"
                         + "                            </div>");
                 if (action.equals("Home")) {
@@ -100,17 +136,16 @@ public class AddBookCartController extends HttpServlet {
                     int quan = book.getQuantity() + quantity;
                     if (quan > quantityCheck) {
                         request.setAttribute("MODAL", "<div class=\"row\">\n"
-                        + "                         <div class=\"col-md-3\">\n"
-                        + "                                <div class=\"product-preview\">\n"
-                        + "                                    <img src=\"" + book.getImg() + "\"/>\n"
-                        + "                                </div>\n"
-                        + "                            </div>\n"
-                        + "                         <div class=\"col-md-9\">\n"
-                        + "                             <p style=\"color: red;\"><b>Thêm \""+ book.getName() +"\" - số lượng "+ quantity +"  vào giỏ hàng thất bại</b></p>\n"
-                        + "                             <p style=\"color: red;\"><b>(Số lượng yêu cầu không có sẳn - Hiện tại còn " + quantityCheck + " sản phẩm)</b></p>\n"
-
-                        + "                                </div>\n"
-                        + "                            </div>");
+                                + "                         <div class=\"col-md-3\">\n"
+                                + "                                <div class=\"product-preview\">\n"
+                                + "                                    <img src=\"" + book.getImg() + "\"/>\n"
+                                + "                                </div>\n"
+                                + "                            </div>\n"
+                                + "                         <div class=\"col-md-9\">\n"
+                                + "                             <p style=\"color: red;\"><b>Thêm \"" + book.getName() + "\" - số lượng " + quantity + "  vào giỏ hàng thất bại</b></p>\n"
+                                + "                             <p style=\"color: red;\"><b>(Số lượng yêu cầu không có sẳn - Hiện tại còn " + quantityCheck + " sản phẩm)</b></p>\n"
+                                + "                                </div>\n"
+                                + "                            </div>");
                         if (action.equals("Home")) {
                             url = HOME;
                         } else {

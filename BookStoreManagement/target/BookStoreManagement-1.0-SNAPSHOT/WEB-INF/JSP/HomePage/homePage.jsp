@@ -12,7 +12,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Home Page</title>
+        <title>Home</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="Colo Shop Template">
@@ -21,7 +21,17 @@
         <link type="text/css" rel="stylesheet" href="CSS/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="STYLES/bootstrap4/bootstrap.min.css" />
     </head>
-
+    <script>
+        window.addEventListener('load', () => {
+            const query = window.location.search;
+            const urlParams = new URLSearchParams(query);
+            var product = urlParams.get('index');
+            if (product === null) {
+                product = "1";
+            }
+            document.getElementById(product).classList.add("active");
+        });
+    </script>
     <body>
         <%@include file="../HeaderFooterPage/header.jsp" %>
         <div style="margin-top: 180px; background-color: white;" id="breadcrumb" class="section" >
@@ -123,10 +133,12 @@
                         <div style="text-align: center;" class="row">
                             <div class="col-md-12">
                                 <div class="pagination">
-                                    <%                                        for (int i = 1; i <= pagenum; i++) {
+                                    <%                                        if (pagenum > 1) {
+                                            for (int i = 1; i <= pagenum; i++) {
                                     %>
                                     <a id="<%=i%>" onclick="this.parentNode.submit();" href="<%=controller%>index=<%=i%>"><%=i%></a>
                                     <%
+                                            }
                                         }
                                     %>
                                 </div>
@@ -142,17 +154,6 @@
                             }
                         %>
                     </div>
-                    <script>
-                        window.addEventListener('load', () => {
-                            const query = window.location.search;
-                            const urlParams = new URLSearchParams(query);
-                            var product = urlParams.get('index');
-                            if (product === null) {
-                                product = "1";
-                            }
-                            document.getElementById(product).classList.add("active");
-                        });
-                    </script>
                     <style>
                         .pagination {
                             display: inline-block;

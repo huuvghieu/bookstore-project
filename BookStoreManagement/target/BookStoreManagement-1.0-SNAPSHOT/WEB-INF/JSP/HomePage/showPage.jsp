@@ -15,7 +15,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Show Page</title>
+        <title>Show</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="Colo Shop Template">
@@ -82,10 +82,9 @@
                 } catch (Exception e) {
                 }
                 String show = "";
-                String controllerAdd = (String) request.getAttribute("CONTROLLER");
                 String index = (String) request.getParameter("index");
                 if (index == null) {
-                    index = "";
+                    index = "1";
                 }
                 Locale localeVN = new Locale("vi", "VN");
                 NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
@@ -95,7 +94,7 @@
             <div class="col-md-4 col-xs-6 gg <%= show%>">
                 <div class="product">
                     <div class="product-img">
-                        <form style="display: inline-block;" method="GET" action="LoadController">
+                        <form style="display: inline-block; width: 100%" method="GET" action="LoadController">
                             <input type="hidden" name="isbn" value="<%=list.get(i).getIsbn()%>" /> 
                             <a class="product-img" style="cursor: pointer;" onclick="this.parentNode.submit();"><img src="<%= list.get(i).getImg()%>" alt=""></a>
                         </form>
@@ -107,8 +106,9 @@
                                 <input type="hidden" name="isbn" value="<%=list.get(i).getIsbn()%>" /> 
                                 <a style="cursor: pointer; color: black; font-weight: bold;" onclick="this.parentNode.submit();"><%= list.get(i).getName()%></a>
                             </form>
-                        </h3>
+                        </h3>                                
                         <h4 class="product-price"><%= price%></h4>                                    
+                        <h8>Hiện còn: <%= list.get(i).getQuantity()%></h8>                                    
                         <div class="product-btns">
                             <form style="display: inline-block;" method="GET" action="LoadController">
                                 <input type="hidden" name="isbn" value="<%=list.get(i).getIsbn()%>" /> 
@@ -119,13 +119,18 @@
                         </div>
                     </div>
                     <div class="add-to-cart">
-                        <form style="display: inline-block;" method="GET" action="AddBookCartController">
+                        <form style="display: inline-block;" method="POST" action="AddBookCartController?index=<%= index %>">
                             <input name="quantity" id="quantity" type="hidden" value="1">
                             <input type="hidden" name="isbn" value="<%=list.get(i).getIsbn()%>" /> 
                             <input name="quantityCheck" value="<%= list.get(i).getQuantity()%>" type="hidden">
-                            <input name="controller" value="<%= controllerAdd%>" type="hidden">
-                            <input name="index" value="<%= index%>" type="hidden">
+                            <input name="controller" value="<%= controller%>" type="hidden">
                             <button type="submit" value="Home" name="action" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ</button>
+                            <input style="display: none" name="searchBook" value="<%= search%>">
+                            <input style="display: none" name="cateID" value="<%= cateN%>">
+                            <input style="display: none" name="pubID" value="<%= pubN%>">
+                            <input style="display: none" name="max" value="<%= min%>">
+                            <input style="display: none" name="min" value="<%= max%>">
+                            <input style="display: none" name="mess" value="<%= me%>">
                         </form>
                     </div>
                 </div>

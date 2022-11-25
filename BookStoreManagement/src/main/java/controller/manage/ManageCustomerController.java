@@ -90,6 +90,11 @@ public class ManageCustomerController extends HttpServlet {
                 if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
                     modal = "Chỉnh sửa thông tin thất bại(Email không hợp lệ)";
                     throw new Exception();
+                } else if (!cus.getEmail().equals(email)) {
+                    if (cusDao.checkCustomerEmail(email)) {
+                        modal = "Chỉnh sửa thông tin thất bại(Email đã được sử dụng)";
+                        throw new Exception();
+                    }
                 }
                 if (phone.isBlank() || phone.isEmpty()) {
                     modal = "Chỉnh sửa thông tin thất bại(Số điện thoại không được để trống)";
@@ -97,6 +102,11 @@ public class ManageCustomerController extends HttpServlet {
                 } else if (!phone.matches(new CustomerDTO().PHONE_FORMAT)) {
                     modal = "Chỉnh sửa thông tin thất bại(Số điện thoại không hợp lệ)";
                     throw new Exception();
+                } else if (!cus.getPhone().equals(phone)) {
+                    if (cusDao.checkCustomerPhone(phone)) {
+                        modal = "Chỉnh sửa thông tin thất bại(Số điện thoại đã được sử dụng)";
+                        throw new Exception();
+                    }
                 }
                 if (addr.length() > 500 || addr.length() < 5) {
                     modal = "Chỉnh sửa thông tin thất bại(Địa chỉ phải trong khoảng [5,500] ký tự)";
@@ -175,10 +185,16 @@ public class ManageCustomerController extends HttpServlet {
                 if (email.isBlank() || email.isEmpty()) {
                     checkValidation = false;
                     cusError.setEmailError("Email không được bỏ trống");
+                } else if (cusDao.checkCustomerEmail(email)) {
+                    checkValidation = false;
+                    cusError.setEmailError("Email đã được sử dụng");
                 }
                 if (!phone.matches(new CustomerDTO().PHONE_FORMAT)) {
                     checkValidation = false;
                     cusError.setPhoneError("Số điện thoại không hợp lệ");
+                } else if (cusDao.checkCustomerPhone(phone)) {
+                    cusError.setPhoneError("Số điện thoại đã được sử dụng");
+                    checkValidation = false;
                 }
                 if (addr.length() > 500 || addr.length() < 5) {
                     checkValidation = false;
@@ -413,7 +429,7 @@ public class ManageCustomerController extends HttpServlet {
                     + "                            </h5>"
                     + "                                <button style=\"border: none; color: white; background-color: #009933;\" type=\"button\" class=\"btn btn-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#myModal\">\n"
                     + "                                    <img style=\" height: 20px; width: 20px;\" src=\"IMG/plus.png\"/>\n"
-                    + "                                    <b>Thêm tài khoản nhân viên</b>\n"
+                    + "                                    <b>Thêm tài khoản khách hàng</b>\n"
                     + "                                </button>\n"
                     + "                            </div>\n");
             if (listCust.size() <= 0) {
@@ -456,7 +472,7 @@ public class ManageCustomerController extends HttpServlet {
                     out.println("                              <td><i style=\"color: red;\" class=\"fa fa-times\" aria-hidden=\"true\"></i><input readonly=\"\" style=\"width: 30px; color: red; border: none;\" type=\"hidden\" value=\"" + delete + "\"/></td>\n");
                 }
                 out.println("                        <td>\n"
-                        + "                                        <button id=\"edit\" onclick=\"updateCus('ManageCustomerController?index=" + index + "','" + search + "','" + customerDTO.getCustomerID() + "'," + index + ",'load')\" data-toggle=\"tooltip\" title=\"Edit\" class=\"pd-setting-ed\"><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n"
+                        + "                                        <button id=\"edit\" onclick=\"updateCus('ManageCustomerController?index=" + index + "','" + search + "','" + customerDTO.getCustomerID() + "'," + index + ",'load')\" data-toggle=\"tooltip\" title=\"Chỉnh sửa\" class=\"pd-setting-ed\"><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n"
                         + "                        </td>\n"
                         + "                        \n"
                         + "                </tr>\n");
@@ -469,8 +485,10 @@ public class ManageCustomerController extends HttpServlet {
             } else {
                 page = (indexCount / 9) + 1;
             }
-            for (int j = 1; j < page + 1; j++) {
-                out.println("                    <a id=\"" + j + "\" onclick=\"loadCus('ManageCustomerController?searchCus=" + search + "&index=" + j + "'," + j + ")\" href=\"#\">" + j + "</a>\n");
+            if (page > 1) {
+                for (int j = 1; j < page + 1; j++) {
+                    out.println("                    <a id=\"" + j + "\" onclick=\"loadCus('ManageCustomerController?searchCus=" + search + "&index=" + j + "'," + j + ")\" href=\"#\">" + j + "</a>\n");
+                }
             }
             out.println("               </div>\n"
                     + "                        </div>\n"

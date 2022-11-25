@@ -5,12 +5,14 @@
 package controller.login;
 
 import aes.MyAES;
+import cart.Cart;
 import dao.CustomerDAO;
 import dao.StaffDAO;
 import dto.CustomerDTO;
 import dto.StaffDTO;
 import email.JavaMailUtil;
 import java.io.IOException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,8 @@ public class LoginController extends HttpServlet {
 
     private static final String ERROR = "WEB-INF/JSP/LoginPage/login.jsp";
     private static final String SUCCESS = "GetController";
+    private static final String ADMIN = "LoadManageController?action=manage";
+    private static final String STAFF = "CreateCartController?action=Create";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -59,7 +63,7 @@ public class LoginController extends HttpServlet {
                             + "                         <input style=\"text-align: center;\" type=\"hidden\" name=\"action\" value=\"Send\">\n"
                             + "                         <p style=\"text-align: center; color: green; margin-top: 10px;\"><b>Gửi qua Email thành công!</b></p>\n"
                             + "                     </form>";
-                    JavaMailUtil.sendMail(email, 0, action);//Gửi thông tin qua email
+                    JavaMailUtil.sendMail(email, 0, action, new Cart(), 0, 0, 0);//Gửi thông tin qua email
                 } else {
                     modal = "<form style=\"text-align: center;\" action=\"LoginController\" method=\"POST\">\n"
                             + "                         <p><b>Nhập Email đăng kí tài khoản để nhận được thông tin tài khoản/mật khẩu qua email!</b></p>\n"
@@ -113,7 +117,11 @@ public class LoginController extends HttpServlet {
                         if (staffDao.updateStatusOnline(userID)) {
                             loginStaff.setStatus("1");
                             session.setAttribute("LOGIN_STAFF", loginStaff);
-                            url = SUCCESS;
+                            if (loginStaff.getRole().equals("Staff")) {
+                                url = STAFF;
+                            } else if (loginStaff.getRole().equals("Admin") || loginStaff.getRole().equals("Deliverer")) {
+                                url = ADMIN;
+                            }
                         }
                     } else {
                         request.setAttribute("ERROR", "Tài khoản của bạn đã bị khóa");
@@ -124,7 +132,7 @@ public class LoginController extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            log("ERROR AT GETCONTROLLER : " + e.toString());
+            log("ERROR AT LoginController : " + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }

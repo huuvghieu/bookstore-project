@@ -4,6 +4,9 @@
     Author     : PC
 --%>
 
+<%@page import="dto.PromotionDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.List"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="java.util.Locale"%>
 <%@page import="dto.PublisherDTO"%>
@@ -17,28 +20,22 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Header Page</title>
+        <title>Header</title>
         <meta charset="utf-8">
         <link rel = "icon" href ="https://cdn-icons-png.flaticon.com/512/1903/1903162.png" type = "image/x-icon">
         <!-- Google font -->
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
-
         <!-- Bootstrap -->
         <link type="text/css" rel="stylesheet" href="CSS/bootstrap.min.css" />
-
         <!-- Slick -->
         <link type="text/css" rel="stylesheet" href="CSS/slick.css" />
         <link type="text/css" rel="stylesheet" href="CSS/slick-theme.css" />
-
         <!-- nouislider -->
         <link type="text/css" rel="stylesheet" href="CSS/nouislider.min.css" />
-
         <!-- Font Awesome Icon -->
         <link rel="stylesheet" href="CSS/font-awesome.min.css" />
-
         <!-- Custom stlylesheet -->
         <link type="text/css" rel="stylesheet" href="CSS/stylefix.css" />
-
         <link rel="stylesheet" type="text/css" href="STYLES/bootstrap4/bootstrap.min.css" />
         <link href="PLUGINS/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="STYLES/main_styles.css" />
@@ -71,17 +68,6 @@
         </script>
         <%
             }
-            String messi = (String) request.getAttribute("MESS");
-            if (messi != null) {
-        %>
-        <script>
-            window.addEventListener("load", function () {
-                alert(document.getElementById("messi").value);
-            }, );
-        </script>
-        <input type="hidden" id="messi" value="<%= messi%>">
-        <%
-            }
         %>
         <!-- Modal -->
         <div  class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -102,6 +88,7 @@
                 </div>
             </div>
         </div>
+        <!-- Modal -->
         <!-- Header -->
         <header style="z-index: 50;" class="header trans_300">
             <!-- Top Navigation -->
@@ -131,11 +118,6 @@
                                         }
                                         if (staff == null && cus == null) {
                                     %>
-                                    <li class="currency">
-                                        <a href="LoadManageController?action=manage">
-                                            Quản lí										
-                                        </a>
-                                    </li>
                                     <li class="currency">
                                         <a href="#">
                                             Chào mừng đến với Phương Nam										
@@ -171,10 +153,14 @@
                                                 <%
                                                 } else {
                                                 %>
-
+                                            <li class="currency">
+                                                <a href="LoadManageController?action=manage">
+                                                    Quản lí										
+                                                </a>
+                                            </li>
                                             <li class="currency">
                                                 <a href="#">
-                                                    Chào mừng <%= staff.getName() %>										
+                                                    Chào mừng <%= staff.getName()%>										
                                                 </a>
                                             </li>
                                             <li class="account">
@@ -203,7 +189,7 @@
                                                 <div class="row">
                                                     <div class="col-lg-12 text-right">
                                                         <div class="logo_container">
-                                                            <a href="GetController?">Phương<span>Nam</span></a>
+                                                            <a style="font-size: 44px;" href="GetController?">Phương<span style="color: #d10024;">Nam</span></a>
                                                         </div>
                                                         <nav class="navbar">
                                                             <!-- SEARCH BAR -->
@@ -218,22 +204,23 @@
                                                                         float total = 0;
                                                                     %>
                                                                     <form action="SearchBookController" method="GET">
-                                                                        <input class="input" type="text" value="<%= search%>" name="searchBook" placeholder="Tìm sách theo tiêu đề, tác giả hoặc ISBN" style="width: 360px">
+                                                                        <input class="input" type="text" value="<%= search%>" name="searchBook" placeholder="Tìm sách theo tiêu đề, tác giả hoặc ISBN" style="width: 360px;">
                                                                         <input class="search-btn" type="submit" name="button" value="Tìm kiếm" style="width: 100px"/>
                                                                     </form>
                                                                 </div>
                                                             </div>
                                                             <!-- /SEARCH BAR -->
-
+                                                            <%
+                                                                if (staff == null) {
+                                                            %>
                                                             <!-- ACCOUNT -->
                                                             <div class="clearfix">
                                                                 <div class="header-ctn">
                                                                     <!-- Cart -->
                                                                     <div class="dropdown">
-                                                                        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer">
-                                                                            <i class="fa fa-shopping-cart"></i>
+                                                                        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer;">
+                                                                            <i class="fa fa-shopping-cart fa-3x"></i>
                                                                             <span>Giỏ hàng</span>
-
                                                                             <%
                                                                                 if (session.getAttribute("SIZE") != null && (int) session.getAttribute("SIZE") > 0) {
                                                                                     int count = (int) session.getAttribute("SIZE");
@@ -305,11 +292,151 @@
                                                                 </div> 
                                                             </div>
                                                             <!-- /ACCOUNT -->
+                                                            <%
+                                                            } else {
+                                                            %>
+                                                            <a style="text-decoration: none;" href="CreateCartController?action=Create">
+                                                                <div style="text-align: center; margin-top: 20px; cursor: pointer; text-decoration: none;">
+                                                                    <i style="color: #1e1e27; position: relative;" class="fa fa-cart-plus fa-3x" aria-hidden="true">
+                                                                        <%
+                                                                            if (session.getAttribute("SIZE") != null && (int) session.getAttribute("SIZE") > 0) {
+                                                                                int count = (int) session.getAttribute("SIZE");
+                                                                        %>
+                                                                        <div style="left: 45px; top: 0px; padding: 5px 8px 5px 8px; position: absolute; background-color: #d10040; color: white; font-size: 12px; border-radius: 50%;" class="qty"><%= count%></div>
+                                                                        <%
+                                                                            }
+                                                                        %>
+                                                                    </i>
+                                                                    <p style="color: #1e1e27"><b>Hóa đơn</b></p>
+                                                                </div>
+                                                            </a>
+                                                            <%
+                                                                }
+                                                            %>
                                                         </nav>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <%
+                                            List<PromotionDTO> listPro = (List<PromotionDTO>) session.getAttribute("PROMOTION");
+                                            if (listPro != null) {
+                                        %>
+                                        <div style="width: 100%; height: 35px; background-color: #1E1E27;" class="marquee">
+                                            <ul  class="marquee-content">
+                                                <%
+                                                    for (PromotionDTO promotionDTO : listPro) {
+                                                %>
+                                                <li style="font-size: 15px;">
+                                                    <strong>
+                                                        Khuyến mãi : <%= promotionDTO.getDescription() %>
+                                                    </strong>
+                                                </li>
+                                                <li></li>
+                                                <li></li>
+                                                <li></li>
+                                                <%
+                                                    }
+                                                %>
+                                            </ul>
+                                        </div>
+                                        <%
+                                            }
+                                        %>
+                                        <style>
+                                            @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+                                            * {
+                                                margin: 0;
+                                                padding: 0;
+                                                box-sizing: border-box;
+                                            }
+
+                                            :root {
+                                                --marquee-width: 80vw;
+                                                --marquee-height: 20vh;
+                                                /* --marquee-elements: 12; */ /* defined with JavaScript */
+                                                --marquee-elements-displayed: 5;
+                                                --marquee-element-width: calc(var(--marquee-width) / var(--marquee-elements-displayed));
+                                                --marquee-animation-duration: calc(var(--marquee-elements) * 10s);
+                                            }
+
+                                            .marquee {
+                                                width: var(--marquee-width);
+                                                height: var(--marquee-height);
+                                                background-color: #111;
+                                                color: #eee;
+                                                overflow: hidden;
+                                                position: relative;
+                                            }
+                                            .marquee:before, .marquee:after {
+                                                position: absolute;
+                                                top: 0;
+                                                width: 10rem;
+                                                height: 100%;
+                                                content: "";
+                                                z-index: 1;
+                                            }
+                                            .marquee:before {
+                                                left: 0;
+                                                background: linear-gradient(to right, #111 0%, transparent 100%);
+                                            }
+                                            .marquee:after {
+                                                right: 0;
+                                                background: linear-gradient(to left, #111 0%, transparent 100%);
+                                            }
+                                            .marquee-content {
+                                                list-style: none;
+                                                height: 100%;
+                                                display: flex;
+                                                animation: scrolling var(--marquee-animation-duration) linear infinite;
+                                            }
+                                            /* .marquee-content:hover {
+                                              animation-play-state: paused;
+                                            } */
+                                            @keyframes scrolling {
+                                                0% { transform: translateX(0); }
+                                                100% { transform: translateX(calc(-1 * var(--marquee-element-width) * var(--marquee-elements))); }
+                                            }
+                                            .marquee-content li {
+                                                display: flex;
+                                                justify-content: center;
+                                                align-items: center;
+                                                /* text-align: center; */
+                                                flex-shrink: 0;
+                                                width: var(--marquee-element-width);
+                                                max-height: 100%;
+                                                font-size: calc(var(--marquee-height)*3/4); /* 5rem; */
+                                                white-space: nowrap;
+                                            }
+
+                                            .marquee-content li img {
+                                                width: 100%;
+                                                /* height: 100%; */
+                                                border: 2px solid #eee;
+                                            }
+
+                                            @media (max-width: 600px) {
+                                                html { font-size: 12px; }
+                                                :root {
+                                                    --marquee-width: 100vw;
+                                                    --marquee-height: 16vh;
+                                                    --marquee-elements-displayed: 3;
+                                                }
+                                                .marquee:before, .marquee:after { width: 5rem; }
+                                            }
+                                        </style>
+                                        <script>
+                                            const root = document.documentElement;
+                                            const marqueeElementsDisplayed = getComputedStyle(root).getPropertyValue("--marquee-elements-displayed");
+                                            const marqueeContent = document.querySelector("ul.marquee-content");
+
+                                            root.style.setProperty("--marquee-elements", marqueeContent.children.length);
+
+                                            for (let i = 0; i < marqueeElementsDisplayed; i++) {
+                                                marqueeContent.appendChild(marqueeContent.children[i].cloneNode(true));
+                                            }
+                                        </script>
                                         </header>
                                         </body>
                                         </html>

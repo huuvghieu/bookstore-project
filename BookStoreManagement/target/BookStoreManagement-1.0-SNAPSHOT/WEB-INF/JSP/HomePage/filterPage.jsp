@@ -12,7 +12,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <link rel = "icon" href ="https://cdn-icons-png.flaticon.com/512/1903/1903162.png" type = "image/x-icon">
+        <title>Filter</title>
     </head>
     <body>
         <!-- aside Widget -->
@@ -85,7 +86,7 @@
                         <form action="FilterPriceController" method="GET">
                             <input type="hidden" value="1000000" name="max"/>
                             <input type="hidden" value="200000" name="min"/>
-                            <button class="hover" style="border: none; background: none;" name="mess" value="200.000 - Above">200.000đ - Above</button>
+                            <button class="hover" style="border: none; background: none;" name="mess" value="200.000 trở lên">200.000đ trở lên</button>
                         </form>
                     </label>
                 </div>

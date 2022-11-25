@@ -15,12 +15,15 @@ import com.paypal.api.payments.PayerInfo;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.PaymentExecution;
 import com.paypal.api.payments.RedirectUrls;
+import com.paypal.api.payments.ShippingAddress;
 import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import dto.BookDTO;
+import dto.PromotionDTO;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -34,10 +37,10 @@ public class PaymentServices {
     private static final String MODE = "sandbox";
     private static final double EXCHANGE_RATE = 24000;
 
-    public String authorizePayment(List<BookDTO> listBook) throws PayPalRESTException {
+    public String authorizePayment(List<BookDTO> listBook, String ship, List<PromotionDTO> listPro) throws PayPalRESTException {
         Payer payer = getPayerInformation();
         RedirectUrls redirectUrls = getRedirectUrls();
-        List<Transaction> listTransaction = getTransactionInformation(listBook);
+        List<Transaction> listTransaction = getTransactionInformation(listBook, ship, listPro);
         Payment requestPayment = new Payment();
         requestPayment.setTransactions(listTransaction)
                 .setRedirectUrls(redirectUrls)
@@ -60,27 +63,39 @@ public class PaymentServices {
         return approvalLink;
     }
 
-    private List<Transaction> getTransactionInformation(List<BookDTO> listBook) {
+    private List<Transaction> getTransactionInformation(List<BookDTO> listBook, String shipP, List<PromotionDTO> listPro) {
         Transaction transaction = new Transaction();
         ItemList itemList = new ItemList();
         List<Item> items = new ArrayList<Item>();
         double subTotal = 0;
         double ship = 0;
         double total = 0;
+        double discount = 0;
         for (BookDTO book : listBook) {
-            double price = (double) Math.round((book.getPrice() / EXCHANGE_RATE) * 100) / 100.0;
+            total += book.getPrice() * book.getQuantity();
+        }
+        for (PromotionDTO promotionDTO : listPro) {
+            if (promotionDTO.getCondition() <= total && promotionDTO.getDiscount() >= discount) {
+                discount = promotionDTO.getDiscount();
+            }
+        }
+        discount = (double) Math.round((1 - discount) * 100) / 100.0;
+        total = 0;
+        for (BookDTO book : listBook) {
+            double price = (double) Math.round(((book.getPrice() * discount) / EXCHANGE_RATE) * 100) / 100.0;
             Item item = new Item();
             item.setCurrency("USD")
                     .setName(book.getName())
                     .setPrice(String.valueOf(price))
                     .setQuantity(String.valueOf(book.getQuantity()));
-            subTotal += price*book.getQuantity();
+            subTotal += price * book.getQuantity();
             items.add(item);
         }
+        subTotal = (double) Math.round(subTotal * 100) / 100.0;
         Details details = new Details();
-              if (subTotal < 15) {
+        if (shipP.equals("YES") && subTotal < 15) {
             ship = 1.00;
-        } else {
+        } else if (shipP.equals("NO") || subTotal >= 15) {
             ship = 0.00;
         }
         total = subTotal + ship;
@@ -102,7 +117,7 @@ public class PaymentServices {
 
     private RedirectUrls getRedirectUrls() {
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://localhost:8080/BookStoreManagement/GetController");
+        redirectUrls.setCancelUrl("http://localhost:8080/BookStoreManagement/CheckoutController?action=Checkout");
         redirectUrls.setReturnUrl("http://localhost:8080/BookStoreManagement/ReviewPaymentController");
         return redirectUrls;
     }
@@ -125,8 +140,8 @@ public class PaymentServices {
         payer.setPaymentMethod("paypal");
         PayerInfo payerInfor = new PayerInfo();
         payerInfor.setFirstName("Thịnh")
-                .setLastName("Phạm")
-                .setEmail("thinhphamquoc9999@gmail.com");
+                .setEmail("thinhphamquoc9999@gmail.com")
+                .setShippingAddress(new ShippingAddress("hay"));
         payer.setPayerInfo(payerInfor);
         return payer;
     }

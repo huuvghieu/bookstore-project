@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * 
+ *
  */
 //Ngọc Thy, Quốc Thịnh >>>>>>>>>>
 public class ManageStaffController extends HttpServlet {
@@ -459,7 +459,7 @@ public class ManageStaffController extends HttpServlet {
                     out.println("                              <td><i style=\"color: red;\" class=\"fa fa-times\" aria-hidden=\"true\"></i><input readonly=\"\" style=\"width: 30px; color: red; border: none;\" type=\"hidden\" value=\"" + delete + "\"/></td>\n");
                 }
                 out.println("                        <td>\n"
-                        + "                                        <button id=\"edit\" onclick=\"updateStaff('ManageStaffController?index=" + index + "','" + search + "','" + staffDTO.getStaffID() + "'," + index + ",'load')\" data-toggle=\"tooltip\" title=\"Edit\" class=\"pd-setting-ed\"><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n"
+                        + "                                        <button id=\"edit\" onclick=\"updateStaff('ManageStaffController?index=" + index + "','" + search + "','" + staffDTO.getStaffID() + "'," + index + ",'load')\" data-toggle=\"tooltip\" title=\"Chỉnh sửa\" class=\"pd-setting-ed\"><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n"
                         + "                        </td>\n"
                         + "                        \n"
                         + "                </tr>\n");
@@ -472,8 +472,10 @@ public class ManageStaffController extends HttpServlet {
             } else {
                 page = (indexCount / 9) + 1;
             }
-            for (int j = 1; j < page + 1; j++) {
-                out.println("                    <a id=\"" + j + "\" onclick=\"loadStaff('ManageStaffController?searchStaff=" + search + "&index=" + j + "'," + j + ")\" href=\"#\">" + j + "</a>\n");
+            if (page > 1) {
+                for (int j = 1; j < page + 1; j++) {
+                    out.println("                    <a id=\"" + j + "\" onclick=\"loadStaff('ManageStaffController?searchStaff=" + search + "&index=" + j + "'," + j + ")\" href=\"#\">" + j + "</a>\n");
+                }
             }
             out.println("       </div>\n"
                     + "                        </div>\n"
