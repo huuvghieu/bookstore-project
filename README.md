@@ -10,14 +10,17 @@ This is a Java web application project which manages all activites in a bookstor
 •	Project Management: Jira
 ## How To Use
 Follow the steps to run this project: <br />
-• Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-•	Run BookStoreManagement(Script).sql in SQL Server (over 2008) Management Studio<br />
-•	Download and install JDK 11, Apach Tomcat 9 <br />
-•	Download and install Microsof JDBC Driver 7.2.
+To clone and run this application, you'll need Java Developing IDE (NetBeans, Eclipe,...), Microsoft SQL Server and Apache Tomcat 8( or higher) installed on your computer.
 
+### 1. After cloned, run PRJShop.sql by using SQL Server and excute it to create Database
+### 2. Go to package Context -> DBUtil.java -> Change user and password (match with your SQL Server)
+
+<img src="https://github.com/blvm159263/samurai_key/blob/main/screen/setup.png" alt="setup"/>
+
+### 3. Make sure you have Apache Tomcat! Then run application as localhost and enjoy!
+
+> **Note**
+> If there is Error in first time you access the website, try to reload website (F5).
 
 
 
