@@ -13,7 +13,8 @@ This is a Java web application project which manages all activites in a bookstor
 <p><img src="https://img.shields.io/badge/apache%20netbeans-1B6AC6?style=for-the-badge&logo=apache%20netbeans%20IDE&logoColor=white" alt="NetBeans"/> <p/>
 
 ## How To Use
-Follow the steps to run this project: <br />
+
+### Follow the steps to run this project: <br />
 To clone and run this application, you'll need Java Developing IDE (NetBeans, Eclipe,...), Microsoft SQL Server and Apache Tomcat 8( or higher) installed on your computer.
 
 ### 1. After cloned, run BookStoreManagement(Script).sql by using SQL Server and excute it to create Database
