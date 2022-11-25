@@ -16,6 +16,10 @@ This is a Java web application project which manages all activites in a bookstor
 
 ### Follow the steps to run this project: <br />
 To clone and run this application, you'll need Java Developing IDE (NetBeans, Eclipe,...), Microsoft SQL Server and Apache Tomcat 8( or higher) installed on your computer.
+Clone the repo
+   ```sh
+   git clone https://github.com/your_username_/Project-Name.git
+   ```
 
 ### 1. After cloned, run BookStoreManagement(Script).sql by using SQL Server and excute it to create Database
 ### 2. Go to package utilities -> DBUtil.java -> Change user and password (match with your SQL Server)
