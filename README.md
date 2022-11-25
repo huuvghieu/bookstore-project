@@ -1,5 +1,5 @@
 ### THE BOOKSTORE MANAGEMENT PROJECT
-![image](https://user-images.githubusercontent.com/90099306/197791075-488b8a31-2047-46b6-95a8-f1c645c75106.png)
+![image](https://user-images.githubusercontent.com/90099306/203913519-c14d526f-fbed-4f1e-9ffa-9ec40600df2c.png)
 This is a Java web application project which manages all activites in a bookstore. This project helps a bookstore can manage a large quantity of books, import and export books. This project also reports renevue of a bookstore. In addition, this project is designed to allow administrator to control the list of books, customers or staffs and view renevue.
 ## Technologies
 •	Code Management: GitHub <br />
@@ -12,10 +12,10 @@ This is a Java web application project which manages all activites in a bookstor
 Follow the steps to run this project: <br />
 To clone and run this application, you'll need Java Developing IDE (NetBeans, Eclipe,...), Microsoft SQL Server and Apache Tomcat 8( or higher) installed on your computer.
 
-### 1. After cloned, run PRJShop.sql by using SQL Server and excute it to create Database
-### 2. Go to package Context -> DBUtil.java -> Change user and password (match with your SQL Server)
+### 1. After cloned, run BookStoreManagement(Script).sql by using SQL Server and excute it to create Database
+### 2. Go to package utilities -> DBUtil.java -> Change user and password (match with your SQL Server)
 
-<img src="https://github.com/blvm159263/samurai_key/blob/main/screen/setup.png" alt="setup"/>
+![image](https://user-images.githubusercontent.com/90099306/203914056-27f8b876-dd36-4230-91e4-1362eb4a34c9.png)
 
 ### 3. Make sure you have Apache Tomcat! Then run application as localhost and enjoy!
 
