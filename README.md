@@ -5,7 +5,7 @@ THE BOOKSTORE MANAGEMENT PROJECT
 </h1>
 
 ![image](https://user-images.githubusercontent.com/90099306/203913519-c14d526f-fbed-4f1e-9ffa-9ec40600df2c.png)
-This is a Java web application project which manages all activites in a bookstore. This project helps a bookstore can manage a large quantity of books, import and export books. This project also reports renevue of a bookstore. In addition, this project is designed to allow administrator to control the list of books, customers or staffs and view renevue.
+This is a Java web application project which manages all activites in a bookstore. This project helps a bookstore can manage a large quantity of books, import and export books. This project also reports revenue of a bookstore. In addition, this project is designed to allow administrator to control the list of books, customers or staffs and view revenue.
 
 ## Technologies
 <p><img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge" alt="Java"/> <img src="https://img.shields.io/badge/MVC2-40B5A4?style=for-the-badge" alt="MVC2"/> <img src="https://img.shields.io/badge/Microsoft_SQL_Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white" alt="SQL Server"/> <img src="https://img.shields.io/badge/Apache-D22128?style=for-the-badge&logo=Apache&logoColor=white" alt="Apache"/><p/>
